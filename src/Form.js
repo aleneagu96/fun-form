@@ -20,7 +20,7 @@ function Form() {
     const [phoneError, setPhoneError] = useState(null);
 
     const [birthDate, setBirthDate] = useState(null);
-    // const [birthDateError, setBirthDateError] = useState(null);
+    const [birthDateError, setBirthDateError] = useState(null);
 
     const [gender, setGender] = useState(null);
 
@@ -89,10 +89,18 @@ function Form() {
     }
 
     // Birth date Input and Error handling
-    const handleBirthDate = (event) => {
-        const birthDate = event.target.value;
-        setBirthDate(birthDate);
+    const handleBirthDate = (date) => {
+        setBirthDate(date);
+        const birthDateError = handleBirthDateError(date);
+        setBirthDateError(birthDateError)
     }
+
+    const handleBirthDateError = (date) => {
+        if (!date) {
+          return "Please select a birth date";
+        }
+        return null;
+      };
 
     // Gender Input and error handling 
     const handleGender = (event) => {
@@ -106,11 +114,8 @@ function Form() {
         return;
     };
 
-    //Terms Input and error handling
+    //Terms error handling
 
-    const handleTerms = (event) => {
-        setTerms(event.target.checked);
-    };
 
     const handleTermsError = (terms) => {
         if (!terms) {
@@ -124,11 +129,14 @@ function Form() {
 
     // Handle Submit
     const handleSumbit = () => {
-        if (treatError || nameError || emailError || phoneError || !gender || !terms) {
+        if (treatError || nameError || emailError || phoneError || birthDateError || !gender || !terms) {
             alert("Please make sure that all fields have been introduced corectly")
         } else
-            alert("Treat on its way")
+            alert("Treat on its way");
     }
+
+    const isFormValid = (treat && name && email && phoneNumber && birthDate && gender && terms);
+
 
     return (
         <div>
@@ -175,7 +183,7 @@ function Form() {
                             onChange={handleBirthDate}
                             views={["year", "month", "day"]}
                             value={birthDate}
-                            
+                            error={handleBirthDateError}
                         />
                     </LocalizationProvider>
 
@@ -208,12 +216,14 @@ function Form() {
                         required
                         control={<Checkbox checked={terms}
                             onChange={(e) => setTerms(e.target.checked)} />}
+                            
                         label="Pawmise not to chew shoes" />
                     {termsError ? <FormHelperText>{termsError}</FormHelperText>: null }
+                    
                 </FormControl>
             </div>
 
-            <Button variant="contained" onClick={handleSumbit}>Gib treat</Button>
+            <Button variant="contained" onClick={handleSumbit} disabled={!isFormValid}>Gib treat</Button>
         </div>
     )
 }
