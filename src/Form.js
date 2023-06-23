@@ -1,6 +1,8 @@
 import { Button, Checkbox, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Typography, FormHelperText } from '@mui/material';
 import React, { useState } from 'react';
-import { DatePicker } from '@mui/lab';
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 
 function Form() {
@@ -18,7 +20,7 @@ function Form() {
     const [phoneError, setPhoneError] = useState(null);
 
     const [birthDate, setBirthDate] = useState(null);
-    const [birthDateError, setBirthDateError] = useState(null);
+    // const [birthDateError, setBirthDateError] = useState(null);
 
     const [gender, setGender] = useState(null);
 
@@ -166,10 +168,16 @@ function Form() {
                         helperText={phoneError}
                         fullWidth>phoneNumber</TextField>
 
-                    <TextField
-                        label=" Birth date"
-                        fullWidth>birthDate
-                    </TextField>
+                
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                            label=" Birth date"
+                            onChange={handleBirthDate}
+                            views={["year", "month", "day"]}
+                            value={birthDate}
+                            
+                        />
+                    </LocalizationProvider>
 
                     <FormControl error={!!genderError}>
 
@@ -193,7 +201,7 @@ function Form() {
                                 label="Good Gal"
                             />
                         </RadioGroup>
-                        {/* {genderError ? <FormHelperText>{genderError}</FormHelperText> : " "} */}
+                        {genderError ? <FormHelperText>{genderError}</FormHelperText> : " "}
                     </FormControl>
 
                     <FormControlLabel
@@ -201,7 +209,7 @@ function Form() {
                         control={<Checkbox checked={terms}
                             onChange={(e) => setTerms(e.target.checked)} />}
                         label="Pawmise not to chew shoes" />
-                        {/* {termsError ? <FormHelperText>{termsError}</FormHelperText>: null } */}
+                    {termsError ? <FormHelperText>{termsError}</FormHelperText>: null }
                 </FormControl>
             </div>
 
